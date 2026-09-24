@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="de">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Informatik-Basics 7 – Formeln kopieren, Zellbezüge und SUMME</title><style>
+:root{--bg:#f3f6fa;--card:#fff;--text:#172033;--muted:#5c667a;--accent:#315efb;--good:#16803a;--bad:#b42318;--border:#d8deea}
+*{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+header{background:#172033;color:#fff;padding:28px 18px}
+header .wrap,main{max-width:900px;margin:auto}
+h1{margin:0 0 8px;font-size:clamp(24px,4vw,38px)} header p{margin:0;color:#d8dfef}
+main{padding:24px 16px 48px}.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin:16px 0;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.qnum{font-size:13px;color:var(--muted);font-weight:bold;text-transform:uppercase;letter-spacing:.04em}.question{font-size:20px;font-weight:bold;margin:8px 0 14px}
+.option{display:block;border:1px solid var(--border);padding:11px 12px;border-radius:10px;margin:8px 0;cursor:pointer;background:#fff}.option:hover{border-color:#9eabcb}
+input[type=radio],input[type=checkbox]{margin-right:9px}.text-answer{width:100%;padding:12px;border:1px solid var(--border);border-radius:9px;font-size:16px}
+.feedback{display:none;margin-top:12px;padding:10px 12px;border-radius:9px;font-size:15px}.feedback.good{display:block;background:#eaf7ee;color:#0c5b2a}.feedback.bad{display:block;background:#fff0ee;color:#8b1a12}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.btn{border:0;border-radius:10px;padding:12px 18px;font-size:16px;font-weight:bold;cursor:pointer}.primary{background:var(--accent);color:#fff}.secondary{background:#e8ecf5;color:#172033}
+#result{font-size:22px;font-weight:bold}.small{color:var(--muted);font-size:14px}.topbar{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.badge{background:#e9edff;color:#2947b8;border-radius:999px;padding:7px 11px;font-size:14px;font-weight:bold}
+</style></head>
+<body>
+<header><div class="wrap"><div class="topbar"><div><h1>Informatik-Basics 7 – Formeln kopieren, Zellbezüge und SUMME</h1><p>Stunde 7 · Informatik-Basics · Klasse 9</p></div><div class="badge">Selbstkontrolle</div></div></div></header>
+<main>
+<div class="card"><strong>So funktioniert's:</strong> Bearbeite alle Aufgaben. Bei Aufgaben mit mehreren richtigen Antworten steht das ausdrücklich dabei. Am Ende klickst du auf <strong>Auswerten</strong>.</div>
+<div id="quiz"></div>
+<div class="card" id="resultBox"><div id="result">Noch nicht ausgewertet</div><p id="resultText" class="small">Bearbeite alle Aufgaben und klicke anschließend auf „Auswerten“.</p>
+<div class="actions"><button class="btn primary" onclick="check()">Auswerten</button><button class="btn secondary" onclick="resetQuiz()">Nochmal versuchen</button></div></div>
+</main>
+<script>
+const DATA = {"questions": [{"type": "single", "q": "In D2 steht =B2*C2. Die Formel wird eine Zeile nach unten nach D3 kopiert. Welche Formel entsteht?", "opts": ["=B2*C2", "=B3*C3", "=C2*D2", "=$B$2*$C$2"], "ans": [1], "exp": "Bei relativen Bezügen passen sich Zeilennummern beim Kopieren an."}, {"type": "single", "q": "Was ist ein relativer Zellbezug?", "opts": ["Ein Bezug, der sich beim Kopieren anpasst", "Ein Bezug, der immer gleich bleibt", "Eine Bilddatei", "Eine Passwortregel"], "ans": [0], "exp": "Relative Zellbezüge verändern sich passend zur neuen Position der kopierten Formel."}, {"type": "single", "q": "Welche Schreibweise zeigt einen absoluten Zellbezug?", "opts": ["B1", "$B$1", "B:1", "=B"], "ans": [1], "exp": "Dollarzeichen vor Spalte und Zeile fixieren die Adresse."}, {"type": "single", "q": "Was passiert mit $B$1 beim Kopieren einer Formel?", "opts": ["Die Adresse bleibt $B$1", "Sie wird automatisch B2", "Sie wird gelöscht", "Sie wird immer C1"], "ans": [0], "exp": "Ein absoluter Bezug bleibt beim Kopieren unverändert."}, {"type": "single", "q": "Welche Funktion addiert die Werte von B1 bis B5?", "opts": ["=SUMME(B1:B5)", "=PLUS(B1:B5)", "=B1*B5", "=ADD(B1-B5)"], "ans": [0], "exp": "Die Funktion SUMME addiert alle Werte im angegebenen Bereich."}, {"type": "multi", "q": "Welche Aussagen sind richtig?", "opts": ["=SUMME(B1:B5) addiert fünf Zellen", "$B$1 bleibt beim Kopieren fest", "B2 ist ein relativer Zellbezug, wenn keine $-Zeichen verwendet werden", "Eine Formel darf nie kopiert werden"], "ans": [0, 1, 2], "exp": "SUMME addiert den Bereich, $ fixiert einen Bezug und normale Bezüge passen sich beim Kopieren an."}, {"type": "single", "q": "In C2 steht =A2+B2. Die Formel wird nach C4 kopiert. Welche Formel entsteht?", "opts": ["=A2+B2", "=A4+B4", "=C2+D2", "=$A$2+$B$2"], "ans": [1], "exp": "Beim Kopieren zwei Zeilen nach unten werden auch die relativen Bezüge um zwei Zeilen verschoben."}, {"type": "text", "q": "Welche Funktion würdest du verwenden, um viele Werte schnell zu addieren?", "answers": ["summe", "=summe", "summe()"], "exp": "Dafür verwendet man die Funktion SUMME."}, {"type": "single", "q": "Warum ist =SUMME(B1:B20) meist besser als B1+B2+…+B20 einzeln zu schreiben?", "opts": ["Die Funktion ist kürzer und übersichtlicher", "Die Funktion verändert alle Werte", "Die Funktion braucht kein Gleichheitszeichen", "Die Funktion speichert die Datei automatisch"], "ans": [0], "exp": "SUMME ist bei größeren Bereichen deutlich übersichtlicher und weniger fehleranfällig."}, {"type": "single", "q": "Welche Formel ist sinnvoll, wenn der Wert in B1 beim Herunterkopieren immer gleich bleiben soll, C2 aber angepasst werden darf?", "opts": ["=B1*C2", "=$B$1*C2", "=B$1*$C$2", "=$B2*C$2"], "ans": [1], "exp": "$B$1 fixiert B1 vollständig, während C2 relativ bleibt."}]};
+function norm(s){return (s||"").toLowerCase().trim().replace(/\s+/g,"").replace(/[ä]/g,"ae").replace(/[ö]/g,"oe").replace(/[ü]/g,"ue").replace(/[ß]/g,"ss");}
+function render(){
+ const root=document.getElementById("quiz"); root.innerHTML="";
+ DATA.questions.forEach((q,i)=>{
+  const card=document.createElement("section"); card.className="card"; card.id="q"+i;
+  card.innerHTML=`<div class="qnum">Aufgabe ${i+1} von ${DATA.questions.length}</div><div class="question">${q.q}</div>`;
+  if(q.type==="single"||q.type==="multi"){
+    q.opts.forEach((o,j)=>{
+      const lab=document.createElement("label"); lab.className="option";
+      lab.innerHTML=`<input type="${q.type==="single"?"radio":"checkbox"}" name="q${i}" value="${j}"> ${o}`;
+      card.appendChild(lab);
+    });
+  } else {
+    const inp=document.createElement("input"); inp.className="text-answer"; inp.name="q"+i; inp.placeholder="Deine Antwort …"; card.appendChild(inp);
+  }
+  const fb=document.createElement("div"); fb.className="feedback"; fb.id="fb"+i; card.appendChild(fb);
+  root.appendChild(card);
+ });
+}
+function check(){
+ let score=0;
+ DATA.questions.forEach((q,i)=>{
+   let ok=false;
+   if(q.type==="single"||q.type==="multi"){
+     const chosen=[...document.querySelectorAll(`[name="q${i}"]:checked`)].map(x=>Number(x.value)).sort((a,b)=>a-b);
+     const ans=[...q.ans].sort((a,b)=>a-b);
+     ok=chosen.length===ans.length && chosen.every((v,k)=>v===ans[k]);
+   }else{
+     const val=norm(document.querySelector(`[name="q${i}"]`).value);
+     ok=q.answers.some(a=>norm(a)===val);
+   }
+   if(ok) score++;
+   const fb=document.getElementById("fb"+i);
+   fb.className="feedback "+(ok?"good":"bad");
+   fb.textContent=(ok?"Richtig. ":"Noch nicht richtig. ")+q.exp;
+ });
+ const pct=Math.round(score/DATA.questions.length*100);
+ document.getElementById("result").textContent=`${score} von ${DATA.questions.length} Punkten (${pct} %)`;
+ let msg = pct>=90?"Sehr sicher!":pct>=70?"Gute Grundlage.":pct>=50?"Schon einiges geschafft – wiederhole die unsicheren Bereiche.":"Schau dir die Grundlagen noch einmal an und probiere das Quiz erneut.";
+ document.getElementById("resultText").textContent=msg;
+ document.getElementById("resultBox").scrollIntoView({behavior:"smooth"});
+}
+function resetQuiz(){
+ document.querySelectorAll("input").forEach(x=>{if(x.type==="radio"||x.type==="checkbox")x.checked=false;else x.value=""});
+ document.querySelectorAll(".feedback").forEach(x=>{x.style.display="";x.className="feedback";x.textContent=""});
+ document.getElementById("result").textContent="Noch nicht ausgewertet";
+ document.getElementById("resultText").textContent="Bearbeite alle Aufgaben und klicke anschließend auf „Auswerten“.";
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+render();
+</script></body></html>
